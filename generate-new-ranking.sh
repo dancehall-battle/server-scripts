@@ -19,7 +19,7 @@ OPTIONS_DANCER_2VS2="-p 2 -f -j"
 OPTIONS_DANCER_COMBINED="-f -j"
 OPTIONS_COUNTRY_BOTH="-r country -j"
 OPTIONS_COUNTRY_HOME="-r country -h -j"
-OPTIONS_COUNTRY_AWAY="-r country -a -j"
+OPTIONS_COUNTRY_AWAY="-r country -a -j -c"
 
 TODAY=$(date +%Y-%m-%d);
 DIR=$ROOTDIR/$TODAY;
