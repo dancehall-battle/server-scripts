@@ -51,3 +51,11 @@ mv temp.jsonld $CONFIG
 $RANKING $OPTIONS_COUNTRY_AWAY > $DIR/country-away.jsonld
 $UPDATECONFIG $DIR/country-away.jsonld -t "$TODAY-country-away" > temp.jsonld
 mv temp.jsonld $CONFIG
+
+echo Rankings generated and TPF server config updated.
+
+if [ "$LDFSERVERID" != "" ]
+then
+  kill -s SIGHUP $LDFSERVERID
+  echo TPF server restarted.
+fi
