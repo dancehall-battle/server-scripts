@@ -1,0 +1,14 @@
+{
+  "name": "server-scripts",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "git@github.com:dancehall-battle/server-scripts.git",
+  "author": "Pieter Heyvaert <pieterheyvaert@mgail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^4.0.1",
+    "date-fns": "^2.7.0",
+    "dhb-ranking": "https://github.com/dancehall-battle/ranking",
+    "fs-extra": "^8.1.0"
+  }
+}
