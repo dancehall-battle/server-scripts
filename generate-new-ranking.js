@@ -91,8 +91,11 @@ async function main() {
     scale: true
   }, `country-away`);
 
+  console.log('Rankings generated.');
+
   //console.log(ldfConfig);
   fs.writeFileSync(program.config, JSON.stringify(ldfConfig));
+  console.log('TPF server config updated.');
 
   if (program.ldf) {
     pm2.connect(function(err) {
@@ -103,7 +106,9 @@ async function main() {
 
       pm2.restart(program.ldf, function(err, proc) {
         pm2.disconnect();   // Disconnects from PM2
-        if (err) throw err
+        if (err) throw err;
+
+        console.log('TPF server restarted.');
       });
     });
   }
