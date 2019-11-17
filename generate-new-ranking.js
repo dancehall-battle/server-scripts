@@ -4,11 +4,12 @@ const path = require('path');
 const {format} = require('date-fns');
 const {DancerRanker, CountryRanker} = require('dhb-ranking');
 const fs = require('fs-extra');
+const pm2 = require('pm2');
 
 program
   .version(pkg.version)
   .option('-d, --dir <path>', 'Directory where to store ranking data.')
-  .option('-l, --ldf <id>', 'ID of the ldf-server process.')
+  .option('-l, --ldf <name>', 'PM2 name of the ldf-server.')
   .requiredOption('-c, --config <path>', 'Config of the ldf-server.')
   .requiredOption('-s, --data-source <string>', 'Name of the data source in the config.')
 
@@ -92,6 +93,20 @@ async function main() {
 
   //console.log(ldfConfig);
   fs.writeFileSync(program.config, JSON.stringify(ldfConfig));
+
+  if (program.ldf) {
+    pm2.connect(function(err) {
+      if (err) {
+        console.error(err);
+        process.exit(2);
+      }
+
+      pm2.restart(program.ldf, function(err, proc) {
+        pm2.disconnect();   // Disconnects from PM2
+        if (err) throw err
+      });
+    });
+  }
 }
 
 async function generateRanking(ranker, options, filename) {
