@@ -33,62 +33,82 @@ const todayDate = new Date();
 const oneYearAgo = new Date();
 oneYearAgo.setFullYear(todayDate.getFullYear() - 1);
 
-generateRanking(new DancerRanker,{
-  participants: ['1'],
-  startDate: oneYearAgo,
-  endDate: todayDate,
-  format: 'jsonld',
-  homeAway: 'both',
-  removeFemaleBattles: true
-}, `dancer-1vs1.jsonld`);
+const ldfConfig = fs.readJsonSync(program.config);
 
-generateRanking(new DancerRanker,{
-  participants: ['2'],
-  startDate: oneYearAgo,
-  endDate: todayDate,
-  format: 'jsonld',
-  homeAway: 'both',
-  removeFemaleBattles: true
-}, `dancer-2vs2.jsonld`);
+main();
 
-generateRanking(new DancerRanker,{
-  participants: ['1', '2'],
-  startDate: oneYearAgo,
-  endDate: todayDate,
-  format: 'jsonld',
-  homeAway: 'both',
-  removeFemaleBattles: true
-}, `dancer-combined.jsonld`);
+async function main() {
+  await generateRanking(new DancerRanker, {
+    participants: ['1'],
+    startDate: oneYearAgo,
+    endDate: todayDate,
+    format: 'jsonld',
+    homeAway: 'both',
+    removeFemaleBattles: true
+  }, `dancer-1vs1`);
 
-generateRanking(new CountryRanker,{
-  participants: ['1', '2'],
-  startDate: oneYearAgo,
-  endDate: todayDate,
-  format: 'jsonld',
-  homeAway: 'both'
-}, `country-both.jsonld`);
+  await generateRanking(new DancerRanker, {
+    participants: ['2'],
+    startDate: oneYearAgo,
+    endDate: todayDate,
+    format: 'jsonld',
+    homeAway: 'both',
+    removeFemaleBattles: true
+  }, `dancer-2vs2`);
 
-generateRanking(new CountryRanker,{
-  participants: ['1', '2'],
-  startDate: oneYearAgo,
-  endDate: todayDate,
-  format: 'jsonld',
-  homeAway: 'home'
-}, `country-home.jsonld`);
+  await generateRanking(new DancerRanker, {
+    participants: ['1', '2'],
+    startDate: oneYearAgo,
+    endDate: todayDate,
+    format: 'jsonld',
+    homeAway: 'both',
+    removeFemaleBattles: true
+  }, `dancer-combined`);
 
-generateRanking(new CountryRanker,{
-  participants: ['1', '2'],
-  startDate: oneYearAgo,
-  endDate: todayDate,
-  format: 'jsonld',
-  homeAway: 'away',
-  scale: true
-}, `country-away.jsonld`);
+  await generateRanking(new CountryRanker, {
+    participants: ['1', '2'],
+    startDate: oneYearAgo,
+    endDate: todayDate,
+    format: 'jsonld',
+    homeAway: 'both'
+  }, `country-both`);
+
+  await generateRanking(new CountryRanker, {
+    participants: ['1', '2'],
+    startDate: oneYearAgo,
+    endDate: todayDate,
+    format: 'jsonld',
+    homeAway: 'home'
+  }, `country-home`);
+
+  await generateRanking(new CountryRanker, {
+    participants: ['1', '2'],
+    startDate: oneYearAgo,
+    endDate: todayDate,
+    format: 'jsonld',
+    homeAway: 'away',
+    scale: true
+  }, `country-away`);
+
+  //console.log(ldfConfig);
+  fs.writeFileSync(program.config, JSON.stringify(ldfConfig));
+}
 
 async function generateRanking(ranker, options, filename) {
   const result = await ranker.getRanking(options);
 
-  fs.writeFile(path.resolve(directory, filename), JSON.stringify(result), (err) => {
-    if (err) throw err;
-  });
+  fs.writeFileSync(path.resolve(directory, filename + '.jsonld'), JSON.stringify(result));
+
+  updateLDFConfig(ldfConfig, `${today}-${filename}`, path.resolve(directory, filename+ '.jsonld'), program.dataSource);
+}
+
+function updateLDFConfig(ldfConfig, title, path, datasourceName) {
+  ldfConfig.datasources[title] = {
+    type: "JsonLdDatasource",
+    hide: true,
+    settings: { "file": path }
+  };
+
+  const datasource = ldfConfig.datasources[datasourceName];
+  datasource.settings.references.push(title);
 }
