@@ -117,7 +117,7 @@ async function main() {
 async function generateRanking(ranker, options, filename) {
   const result = await ranker.getRanking(options);
 
-  fs.writeFileSync(path.resolve(directory, filename + '.nt'), JSON.stringify(result));
+  fs.writeFileSync(path.resolve(directory, filename + '.nt'), result);
 
   updateLDFConfig(ldfConfig, `${today}-${filename}`, path.resolve(directory, filename+ '.nt'), program.dataSource);
 }
