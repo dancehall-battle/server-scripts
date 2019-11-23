@@ -43,7 +43,7 @@ async function main() {
     participants: ['1'],
     startDate: oneYearAgo,
     endDate: todayDate,
-    format: 'jsonld',
+    format: 'ntriples',
     homeAway: 'both',
     removeFemaleBattles: true
   }, `dancer-1vs1`);
@@ -52,7 +52,7 @@ async function main() {
     participants: ['2'],
     startDate: oneYearAgo,
     endDate: todayDate,
-    format: 'jsonld',
+    format: 'ntriples',
     homeAway: 'both',
     removeFemaleBattles: true
   }, `dancer-2vs2`);
@@ -61,7 +61,7 @@ async function main() {
     participants: ['1', '2'],
     startDate: oneYearAgo,
     endDate: todayDate,
-    format: 'jsonld',
+    format: 'ntriples',
     homeAway: 'both',
     removeFemaleBattles: true
   }, `dancer-combined`);
@@ -70,7 +70,7 @@ async function main() {
     participants: ['1', '2'],
     startDate: oneYearAgo,
     endDate: todayDate,
-    format: 'jsonld',
+    format: 'ntriples',
     homeAway: 'both'
   }, `country-both`);
 
@@ -78,7 +78,7 @@ async function main() {
     participants: ['1', '2'],
     startDate: oneYearAgo,
     endDate: todayDate,
-    format: 'jsonld',
+    format: 'ntriples',
     homeAway: 'home'
   }, `country-home`);
 
@@ -86,7 +86,7 @@ async function main() {
     participants: ['1', '2'],
     startDate: oneYearAgo,
     endDate: todayDate,
-    format: 'jsonld',
+    format: 'ntriples',
     homeAway: 'away',
     scale: true
   }, `country-away`);
@@ -117,14 +117,14 @@ async function main() {
 async function generateRanking(ranker, options, filename) {
   const result = await ranker.getRanking(options);
 
-  fs.writeFileSync(path.resolve(directory, filename + '.jsonld'), JSON.stringify(result));
+  fs.writeFileSync(path.resolve(directory, filename + '.nt'), JSON.stringify(result));
 
-  updateLDFConfig(ldfConfig, `${today}-${filename}`, path.resolve(directory, filename+ '.jsonld'), program.dataSource);
+  updateLDFConfig(ldfConfig, `${today}-${filename}`, path.resolve(directory, filename+ '.nt'), program.dataSource);
 }
 
 function updateLDFConfig(ldfConfig, title, path, datasourceName) {
   ldfConfig.datasources[title] = {
-    type: "JsonLdDatasource",
+    type: "TurtleDatasource",
     hide: true,
     settings: { "file": path }
   };
