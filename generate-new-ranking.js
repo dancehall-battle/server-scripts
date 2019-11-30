@@ -1,40 +1,24 @@
 const program = require('commander');
 const pkg = require('./package');
 const path = require('path');
-const {format} = require('date-fns');
 const {DancerRanker, CountryRanker} = require('dhb-ranking');
 const fs = require('fs-extra');
 const pm2 = require('pm2');
 
 program
   .version(pkg.version)
-  .option('-d, --dir <path>', 'Directory where to store ranking data.')
-  .option('-l, --ldf <name>', 'PM2 name of the ldf-server.')
-  .requiredOption('-c, --config <path>', 'Config of the ldf-server.')
-  .requiredOption('-s, --data-source <string>', 'Name of the data source in the config.')
+  .requiredOption('-f, --file <path>', 'File where the ranking data is appended.')
+  .option('-l, --ldf <name>', 'PM2 name of the ldf-server.');
 
 program.parse(process.argv);
 
-let rootDirectory = program.dir || process.cwd();
-
-if (!path.isAbsolute(rootDirectory)) {
-  rootDirectory = path.resolve(process.cwd(), rootDirectory);
-}
-
-const today = format(new Date(), 'yyyy-MM-dd');
-const directory = path.join(rootDirectory, today);
-
-fs.ensureDirSync(directory);
-
-if (!path.isAbsolute(program.config)) {
-  program.config = path.resolve(process.cwd(), program.config);
+if (!path.isAbsolute(program.file)) {
+  program.file = path.resolve(process.cwd(), program.file);
 }
 
 const todayDate = new Date();
 const oneYearAgo = new Date();
 oneYearAgo.setFullYear(todayDate.getFullYear() - 1);
-
-const ldfConfig = fs.readJsonSync(program.config);
 
 main();
 
@@ -93,10 +77,6 @@ async function main() {
 
   console.log('Rankings generated.');
 
-  //console.log(ldfConfig);
-  fs.writeFileSync(program.config, JSON.stringify(ldfConfig));
-  console.log('TPF server config updated.');
-
   if (program.ldf) {
     pm2.connect(function(err) {
       if (err) {
@@ -114,21 +94,8 @@ async function main() {
   }
 }
 
-async function generateRanking(ranker, options, filename) {
+async function generateRanking(ranker, options) {
   const result = await ranker.getRanking(options);
 
-  fs.writeFileSync(path.resolve(directory, filename + '.nt'), result);
-
-  updateLDFConfig(ldfConfig, `${today}-${filename}`, path.resolve(directory, filename+ '.nt'), program.dataSource);
-}
-
-function updateLDFConfig(ldfConfig, title, path, datasourceName) {
-  ldfConfig.datasources[title] = {
-    type: "TurtleDatasource",
-    hide: true,
-    settings: { "file": path }
-  };
-
-  const datasource = ldfConfig.datasources[datasourceName];
-  datasource.settings.references.push(title);
+  fs.appendFileSync(program.file, result);
 }
