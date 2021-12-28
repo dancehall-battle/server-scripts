@@ -8,9 +8,12 @@ const pm2 = require('pm2');
 program
   .version(pkg.version)
   .requiredOption('-f, --file <path>', 'File where the ranking data is appended.')
-  .option('-l, --ldf <name>', 'PM2 name of the ldf-server.');
+  .option('-l, --ldf <name>', 'PM2 name of the ldf-server.')
+  .option('-v, --verbose', 'Show debugging output.');
 
 program.parse(process.argv);
+
+const {verbose} = program;
 
 if (!path.isAbsolute(program.file)) {
   program.file = path.resolve(process.cwd(), program.file);
@@ -23,7 +26,14 @@ oneYearAgo.setFullYear(todayDate.getFullYear() - 1);
 main();
 
 async function main() {
-  await generateRanking(new DancerRanker, {
+  let logger;
+
+  if (verbose) {
+    logger = console;
+    console.log('Generating ranking for dancer 1 vs 1...');
+  }
+
+  await generateRanking(new DancerRanker({logger}), {
     participants: ['1'],
     startDate: oneYearAgo,
     endDate: todayDate,
@@ -32,7 +42,12 @@ async function main() {
     removeFemaleBattles: true
   }, `dancer-1vs1`);
 
-  await generateRanking(new DancerRanker, {
+  if (verbose) {
+    console.log('Generating ranking for dancer 1 vs 1 done.');
+    console.log('Generating ranking for dancer 2 vs 2...');
+  }
+
+  await generateRanking(new DancerRanker(), {
     participants: ['2'],
     startDate: oneYearAgo,
     endDate: todayDate,
@@ -41,7 +56,12 @@ async function main() {
     removeFemaleBattles: true
   }, `dancer-2vs2`);
 
-  await generateRanking(new DancerRanker, {
+  if (verbose) {
+    console.log('Generating ranking for dancer 2 vs 2 done.');
+    console.log('Generating ranking for dancer combined...');
+  }
+
+  await generateRanking(new DancerRanker(), {
     participants: ['1', '2'],
     startDate: oneYearAgo,
     endDate: todayDate,
@@ -50,7 +70,12 @@ async function main() {
     removeFemaleBattles: true
   }, `dancer-combined`);
 
-  await generateRanking(new CountryRanker, {
+  if (verbose) {
+    console.log('Generating ranking for dancer combined done.');
+    console.log('Generating ranking for country both...');
+  }
+
+  await generateRanking(new CountryRanker(), {
     participants: ['1', '2'],
     startDate: oneYearAgo,
     endDate: todayDate,
@@ -58,7 +83,12 @@ async function main() {
     homeAway: 'both'
   }, `country-both`);
 
-  await generateRanking(new CountryRanker, {
+  if (verbose) {
+    console.log('Generating ranking for country both done.');
+    console.log('Generating ranking for country home...');
+  }
+
+  await generateRanking(new CountryRanker(), {
     participants: ['1', '2'],
     startDate: oneYearAgo,
     endDate: todayDate,
@@ -66,7 +96,12 @@ async function main() {
     homeAway: 'home'
   }, `country-home`);
 
-  await generateRanking(new CountryRanker, {
+  if (verbose) {
+    console.log('Generating ranking for country home done.');
+    console.log('Generating ranking for country away...');
+  }
+
+  await generateRanking(new CountryRanker(), {
     participants: ['1', '2'],
     startDate: oneYearAgo,
     endDate: todayDate,
@@ -74,6 +109,10 @@ async function main() {
     homeAway: 'away',
     scale: true
   }, `country-away`);
+
+  if (verbose) {
+    console.log('Generating ranking for country away done.');
+  }
 
   console.log('Rankings generated.');
 
