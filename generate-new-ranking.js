@@ -33,13 +33,16 @@ async function main() {
     console.log('Generating ranking for dancer 1 vs 1...');
   }
 
+  const tpfServer = 'http://localhost:5000/data';
+
   await generateRanking(new DancerRanker({logger}), {
     participants: ['1'],
     startDate: oneYearAgo,
     endDate: todayDate,
     format: 'ntriples',
     homeAway: 'both',
-    removeFemaleBattles: true
+    removeFemaleBattles: true,
+    tpfServer,
   }, `dancer-1vs1`);
 
   if (verbose) {
@@ -53,7 +56,8 @@ async function main() {
     endDate: todayDate,
     format: 'ntriples',
     homeAway: 'both',
-    removeFemaleBattles: true
+    removeFemaleBattles: true,
+    tpfServer,
   }, `dancer-2vs2`);
 
   if (verbose) {
@@ -67,7 +71,8 @@ async function main() {
     endDate: todayDate,
     format: 'ntriples',
     homeAway: 'both',
-    removeFemaleBattles: true
+    removeFemaleBattles: true,
+    tpfServer,
   }, `dancer-combined`);
 
   if (verbose) {
@@ -80,7 +85,8 @@ async function main() {
     startDate: oneYearAgo,
     endDate: todayDate,
     format: 'ntriples',
-    homeAway: 'both'
+    homeAway: 'both',
+    tpfServer,
   }, `country-both`);
 
   if (verbose) {
@@ -93,7 +99,8 @@ async function main() {
     startDate: oneYearAgo,
     endDate: todayDate,
     format: 'ntriples',
-    homeAway: 'home'
+    homeAway: 'home',
+    tpfServer,
   }, `country-home`);
 
   if (verbose) {
@@ -107,7 +114,8 @@ async function main() {
     endDate: todayDate,
     format: 'ntriples',
     homeAway: 'away',
-    scale: true
+    scale: true,
+    tpfServer,
   }, `country-away`);
 
   if (verbose) {
