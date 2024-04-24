@@ -6,7 +6,7 @@
    ```shell
    yarn install
    ```
-2. The data is available via LDF server at <localhost:8080/data>.
+2. The data is available via LDF server at <http://localhost:8080/data>.
 3. Generate new rankings via
    ```shell
    node generate-new-ranking.js -f ranking.nt -v
