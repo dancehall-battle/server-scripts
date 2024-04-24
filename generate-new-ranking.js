@@ -33,7 +33,7 @@ async function main() {
     console.log('Generating ranking for dancer 1 vs 1...');
   }
 
-  const tpfServer = 'http://localhost:5000/data';
+  const tpfServer = 'http://localhost:8080/data';
 
   await generateRanking(new DancerRanker({logger}), {
     participants: ['1'],

@@ -1940,8 +1940,8 @@ depd@2.0.0:
     commander "^4.0.0"
     date-fns "^2.7.0"
     fs-extra "^8.1.0"
-    graphql-ld "^1.4.0"
-    graphql-ld-comunica "^1.2.1"
+    graphql-ld "^1.4.1"
+    graphql-ld-comunica "^1.2.2"
     jsonld "^5.2.0"
 
 dom-serializer@^1.0.1:
@@ -2225,7 +2225,7 @@ graceful-fs@^4.1.6, graceful-fs@^4.2.0:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.10.tgz#147d3a006da4ca3ce14728c7aefc287c367d7a6c"
   integrity sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==
 
-graphql-ld-comunica@^1.2.1:
+graphql-ld-comunica@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/graphql-ld-comunica/-/graphql-ld-comunica-1.2.2.tgz#90095b4be2c6bdca98348ff97b3d877c7c25ab4d"
   integrity sha512-C1akojdgiNwBFjqqQ3v9fNinww9TBg1Rijgsde0+xnYL7S8ELVcx+in6mmmrs2k+AG9WIjrsAzDfNFwQ4U2gQA==
@@ -2234,7 +2234,7 @@ graphql-ld-comunica@^1.2.1:
     graphql-ld "^1.2.0"
     sparqlalgebrajs "^2.5.5"
 
-graphql-ld@^1.2.0, graphql-ld@^1.4.0:
+graphql-ld@^1.2.0, graphql-ld@^1.4.0, graphql-ld@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/graphql-ld/-/graphql-ld-1.4.1.tgz#3fd4e187273c41a79443664eebdef3ef773f0d3a"
   integrity sha512-oJ8o/1DdAbM+oNE9FBnc0bbWgzvImnl/o2fty2NzA4nyj4T6HNbAkr1CcUL9OieSZPEAW7QcU7W66OVHkxDwVw==
